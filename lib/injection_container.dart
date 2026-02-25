@@ -1,11 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/config/env_config.dart';
+import 'core/network/dio_interceptors.dart';
 import 'core/network/network_info.dart';
+import 'core/storage/local_storage.dart';
 import 'core/utils/constants.dart';
 import 'features/sample/data/datasources/sample_local_data_source.dart';
 import 'features/sample/data/datasources/sample_remote_data_source.dart';
+import 'features/sample/data/datasources/impl/sample_local_data_source_impl.dart';
+import 'features/sample/data/datasources/impl/sample_remote_data_source_impl.dart';
 import 'features/sample/data/repositories/sample_repository_impl.dart';
 import 'features/sample/domain/repositories/sample_repository.dart';
 import 'features/sample/domain/usecases/get_sample.dart';
@@ -22,7 +28,7 @@ Future<void> init() async {
   // Features - Sample
   //--------------------------------------------------
 
-  // Bloc
+  // Bloc (factory: new instance per BlocProvider)
   sl.registerFactory(() => SampleBloc(getSample: sl()));
 
   // Use Cases
@@ -43,7 +49,7 @@ Future<void> init() async {
   );
 
   sl.registerLazySingleton<SampleLocalDataSource>(
-    () => SampleLocalDataSourceImpl(),
+    () => SampleLocalDataSourceImpl(localStorage: sl()),
   );
 
   //--------------------------------------------------
@@ -53,18 +59,35 @@ Future<void> init() async {
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
   //--------------------------------------------------
+  // Storage
+  //--------------------------------------------------
+
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton(() => sharedPreferences);
+  sl.registerLazySingleton<LocalStorage>(() => SharedPreferencesStorage(sl()));
+
+  //--------------------------------------------------
   // External
   //--------------------------------------------------
 
-  sl.registerLazySingleton(
-    () => Dio(
+  sl.registerLazySingleton(() {
+    final dio = Dio(
       BaseOptions(
-        baseUrl: AppConstants.baseUrl,
+        baseUrl: EnvConfig.baseUrl, // from --dart-define
         connectTimeout: const Duration(seconds: AppConstants.connectionTimeout),
         receiveTimeout: const Duration(seconds: AppConstants.receiveTimeout),
       ),
-    ),
-  );
+    );
+
+    // Add interceptors in order: Log → Auth → Error
+    dio.interceptors.addAll([
+      LoggingInterceptor(),
+      AuthInterceptor(storage: sl()),
+      ErrorInterceptor(),
+    ]);
+
+    return dio;
+  });
 
   sl.registerLazySingleton(() => InternetConnection());
 }

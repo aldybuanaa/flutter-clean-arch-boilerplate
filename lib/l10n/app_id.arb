@@ -1,0 +1,36 @@
+{
+  "@@locale": "id",
+  "appTitle": "Flutter Clean Arch",
+  "@appTitle": {
+    "description": "Judul aplikasi"
+  },
+  "homeTitle": "Beranda",
+  "@homeTitle": {
+    "description": "Judul halaman beranda/sample"
+  },
+  "fetchSample": "Ambil Data",
+  "@fetchSample": {
+    "description": "Label tombol ambil data"
+  },
+  "loadingMessage": "Memuat...",
+  "@loadingMessage": {
+    "description": "Pesan loading umum"
+  },
+  "errorRetry": "Coba Lagi",
+  "@errorRetry": {
+    "description": "Label tombol coba lagi"
+  },
+  "errorGeneric": "Terjadi kesalahan. Silakan coba lagi.",
+  "@errorGeneric": {
+    "description": "Pesan error umum"
+  },
+  "sampleId": "ID: {id}",
+  "@sampleId": {
+    "description": "Label ID sample",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  }
+}

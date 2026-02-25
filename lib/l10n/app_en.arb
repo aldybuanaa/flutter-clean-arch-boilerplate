@@ -1,0 +1,36 @@
+{
+  "@@locale": "en",
+  "appTitle": "Flutter Clean Arch",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "homeTitle": "Home",
+  "@homeTitle": {
+    "description": "Title for the home/sample page"
+  },
+  "fetchSample": "Fetch Sample",
+  "@fetchSample": {
+    "description": "Label for the fetch sample button"
+  },
+  "loadingMessage": "Loading...",
+  "@loadingMessage": {
+    "description": "Generic loading message"
+  },
+  "errorRetry": "Retry",
+  "@errorRetry": {
+    "description": "Retry button label"
+  },
+  "errorGeneric": "Something went wrong. Please try again.",
+  "@errorGeneric": {
+    "description": "Generic error message"
+  },
+  "sampleId": "ID: {id}",
+  "@sampleId": {
+    "description": "Sample ID label",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  }
+}

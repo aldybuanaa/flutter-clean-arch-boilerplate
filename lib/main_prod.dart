@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter/services.dart';
 
 import 'core/config/env_config.dart';
-import 'core/router/app_router.dart';
-import 'core/utils/app_logger.dart';
 import 'core/utils/app_theme.dart';
+import 'core/router/app_router.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
 
-  AppLogger.i(
-    '🚀 Running: ${EnvConfig.env.toUpperCase()} | ${EnvConfig.baseUrl}',
-  );
+  // Lock orientation to portrait for production mobile apps
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   runApp(const MyApp());
 }
@@ -25,18 +26,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: EnvConfig.appName,
-      debugShowCheckedModeBanner: EnvConfig.isDev,
+      debugShowCheckedModeBanner: false, // no debug banner in prod
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
       routerConfig: AppRouter.router,
-      // Localization
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('en'), Locale('id')],
     );
   }
 }
