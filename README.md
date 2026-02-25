@@ -1,17 +1,40 @@
-# flutter_clean_arch_boilerplate
+# 🚀 Flutter Clean Architecture + BLoC Boilerplate
 
-A new Flutter project.
+Boilerplate ini adalah fondasi standar industri untuk membangun aplikasi Flutter yang *scalable*, *testable*, dan mudah di-maintain. Proyek ini menggunakan **Clean Architecture** yang dipadukan dengan **BLoC** untuk *State Management*.
 
-## Getting Started
+## 🛠️ Tech Stack & Dependencies
+* **Framework:** Flutter
+* **State Management:** `flutter_bloc`
+* **Dependency Injection:** `get_it`
+* **Networking:** `dio`
+* **Functional Programming (Error Handling):** `dartz`
+* **Value Equality:** `equatable`
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 📂 Struktur Direktori (Folder Structure)
+Proyek ini memisahkan secara tegas antara kode inti (`core`) dan fitur spesifik (`features`).
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```text
+lib/
+├── core/
+│   ├── error/              # Failure, Exceptions
+│   ├── usecases/           # Base UseCase class
+│   ├── network/            # Network info (Internet connection checker)
+│   └── utils/              # Constants, Colors, Themes, Helpers
+├── features/
+│   └── [feature_name]/     # Tiap fitur memiliki 3 layer ini
+│       ├── data/
+│       │   ├── datasources/ (Remote & Local API calls)
+│       │   ├── models/      (JSON serialization, extends Entity)
+│       │   └── repositories/(Implementasi kontrak Domain)
+│       ├── domain/
+│       │   ├── entities/    (Core business objects)
+│       │   ├── repositories/(Kontrak/Interfaces)
+│       │   └── usecases/    (Business logic execution)
+│       └── presentation/
+│           ├── bloc/        (State management)
+│           ├── pages/       (UI Screens)
+│           └── widgets/     (Reusable UI components for this feature)
+├── injection_container.dart # Setup GetIt (Service Locator)
+└── main.dart
